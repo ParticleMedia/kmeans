@@ -22,21 +22,24 @@ type Kmeans struct {
 }
 
 // NewWithOptions returns a Kmeans configuration struct with custom settings
-func NewWithOptions(deltaThreshold float64, plotter Plotter) (Kmeans, error) {
+func NewWithOptions(deltaThreshold float64, plotter Plotter, iterationThreshold int) (Kmeans, error) {
 	if deltaThreshold <= 0.0 || deltaThreshold >= 1.0 {
 		return Kmeans{}, fmt.Errorf("threshold is out of bounds (must be >0.0 and <1.0, in percent)")
+	}
+	if iterationThreshold < 0 {
+		return Kmeans{}, fmt.Errorf("iteration threshold must be >0)")
 	}
 
 	return Kmeans{
 		plotter:            plotter,
 		deltaThreshold:     deltaThreshold,
-		iterationThreshold: 96,
+		iterationThreshold: iterationThreshold,
 	}, nil
 }
 
 // New returns a Kmeans configuration struct with default settings
 func New() Kmeans {
-	m, _ := NewWithOptions(0.01, nil)
+	m, _ := NewWithOptions(0.01, nil, 96)
 	return m
 }
 
